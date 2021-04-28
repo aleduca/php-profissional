@@ -1,0 +1,28 @@
+{
+    "name": "alexandreeduardocardoso/php-pro",
+    "description": "php-profissional",
+    "authors": [
+        {
+            "name": "Alexandre Cardoso",
+            "email": "alecar2007@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "files": [
+            "app/helpers/constants.php",
+            "app/router/router.php",
+            "app/core/controller.php",
+            "app/database/connect.php",
+            "app/database/fetch.php",
+            "app/database/create.php",
+            "app/helpers/redirect.php",
+            "app/helpers/flash.php",
+            "app/helpers/sessions.php",
+            "app/helpers/validate.php"
+        ],
+        "psr-4": {
+            "app\\":"app"
+        }
+    }
+}
