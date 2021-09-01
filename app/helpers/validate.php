@@ -6,7 +6,7 @@ function validate(array $validations)
     $param = '';
     foreach ($validations as $field => $validate) {
         $result[$field] = (!str_contains($validate, '|')) ?
-            singleValidation($validate, $field, $param):
+            singleValidation($validate, $field, $param) :
             multipleValidations($validate, $field, $param);
     }
 
@@ -29,13 +29,19 @@ function singleValidation($validate, $field, $param)
 function multipleValidations($validate, $field, $param)
 {
     $explodePipeValidate = explode('|', $validate);
+    $result = [];
     foreach ($explodePipeValidate as $validate) {
         if (str_contains($validate, ':')) {
             [$validate, $param] = explode(':', $validate);
         }
-        $result = $validate($field, $param);
+
+        if (isset($result[$field]) and $result[$field] === false) {
+            continue;
+        }
+
+        $result[$field] = $validate($field, $param);
     }
-    return $result;
+    return $result[$field];
 }
 
 

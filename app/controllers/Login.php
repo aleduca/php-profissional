@@ -4,10 +4,10 @@ namespace app\controllers;
 
 class Login
 {
-    public function index()
+    public function index():array
     {
         return [
-            'view'  => 'login.php',
+            'view' => 'login.php',
             'data' => ['title' => 'Login']
         ];
     }
