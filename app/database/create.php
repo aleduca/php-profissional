@@ -1,15 +1,19 @@
 <?php
 
-
-function create($table, $data)
+function create(string $table, array $data)
 {
     try {
-        // insert into users(firstName,lastName,email,password) values(:firstName,:lastName,:email,:password);
+        if (!arrayIsAddociative($data)) {
+            throw new Exception('O array tem que ser associativo');
+        }
+
         $connect = connect();
 
         $sql = "insert into {$table}(";
         $sql.= implode(',', array_keys($data)).") values(";
         $sql.= ':'.implode(',:', array_keys($data)).")";
+
+        // dd($sql);
 
         $prepare = $connect->prepare($sql);
         return $prepare->execute($data);

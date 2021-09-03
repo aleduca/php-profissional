@@ -18,7 +18,7 @@ class User
     public function create()
     {
         return [
-            'view'  => 'create.php',
+            'view'  => 'create',
             'data' => ['title' => 'Create']
         ];
     }
