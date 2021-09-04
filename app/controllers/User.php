@@ -29,7 +29,7 @@ class User
             'firstName' => 'required',
             'lastName' => 'required',
             'email' => 'email|required|unique:users',
-            'password' => 'required|maxlen:5',
+            'password' => 'maxlen:5|required',
         ]);
 
         if (!$validate) {

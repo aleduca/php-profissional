@@ -10,7 +10,6 @@ function validate(array $validations)
             multipleValidations($validate, $field, $param);
     }
 
-
     if (in_array(false, $result)) {
         return false;
     }
@@ -35,11 +34,11 @@ function multipleValidations($validate, $field, $param)
             [$validate, $param] = explode(':', $validate);
         }
 
-        if (isset($result[$field]) and $result[$field] === false) {
-            continue;
-        }
-
         $result[$field] = $validate($field, $param);
+
+        if (isset($result[$field]) and $result[$field] === false) {
+            break;
+        }
     }
     return $result[$field];
 }

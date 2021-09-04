@@ -21,12 +21,6 @@ try {
         throw new Exception("Essa view {$data['view']} não existe");
     }
 
-    $arr = [
-        "firstName" => "Alexandre",
-        "lastName" => "Cardoso",
-        "email" => "alecar2007@gmail.com",
-        "password" => "123"
-    ];
 
     $templates = new League\Plates\Engine(VIEWS);
 
