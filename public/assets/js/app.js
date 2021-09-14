@@ -1,3 +1,7 @@
-import users from './users';
+import Alpine from "alpinejs";
+import users from "./alpine-components/users";
 
-users();
+window.Alpine = Alpine;
+window.users = users;
+
+Alpine.start();
