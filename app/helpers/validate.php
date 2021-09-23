@@ -1,13 +1,21 @@
 <?php
 
-function validate(array $validations)
+function validate(array $validations, bool $persistInputs = false, bool $checkCsrf = false)
 {
+    if ($checkCsrf) {
+        checkCsrf();
+    }
+
     $result = [];
     $param = '';
     foreach ($validations as $field => $validate) {
         $result[$field] = (!str_contains($validate, '|')) ?
             singleValidation($validate, $field, $param) :
             multipleValidations($validate, $field, $param);
+    }
+
+    if ($persistInputs) {
+        setOld();
     }
 
     if (in_array(false, $result)) {

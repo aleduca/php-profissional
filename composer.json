@@ -26,7 +26,9 @@
             "app/helpers/sessions.php",
             "app/helpers/validate.php",
             "app/helpers/validations.php",
-            "app/helpers/helpers.php"
+            "app/helpers/helpers.php",
+            "app/helpers/old.php",
+            "app/helpers/csrf.php"
         ],
         "psr-4": {
             "app\\":"app"
