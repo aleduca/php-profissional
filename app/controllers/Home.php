@@ -9,6 +9,8 @@ class Home
         // $users = all('users');
 
         read('users', 'id,firstName,lastName');
+        where('id', 5);
+        orWhere('email', '>', 'xandecar@hotmail.com', 'and');
         order('id', 'asc');
         limit(5);
 
