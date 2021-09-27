@@ -9,7 +9,8 @@
     ],
     "require": {
         "symfony/var-dumper": "^5.3",
-        "league/plates": "^3.4"
+        "league/plates": "^3.4",
+        "vlucas/phpdotenv": "^5.3"
     },
     "autoload": {
         "files": [

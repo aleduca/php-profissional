@@ -3,6 +3,12 @@
 require 'bootstrap.php';
 
 try {
+    // if ($_ENV['MAINTENANCE'] === 'true') {
+    //     // var_dump('em manutenção');
+    //     require 'maintenance.php';
+    //     die();
+    // }
+
     $data = router();
 
     if (isAjax()) {

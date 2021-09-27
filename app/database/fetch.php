@@ -1,4 +1,5 @@
 <?php
+
 // query builder
 
 $query = [];
@@ -122,7 +123,7 @@ function orWhere()
     $query['sql'] = "{$query['sql']} {$typeWhere} {$field} {$operator} :{$field}";
 }
 
-function whereTwoParameters(array $args):array
+function whereTwoParameters(array $args): array
 {
     $field = $args[0];
     $operator = '=';
@@ -131,7 +132,7 @@ function whereTwoParameters(array $args):array
 
     return [$field,$operator,$value, $typeWhere];
 }
-function whereThreeParameters(array $args):array
+function whereThreeParameters(array $args): array
 {
     $operators = ['=','<','>','!==','<=','>='];
     $field = $args[0];
@@ -141,11 +142,11 @@ function whereThreeParameters(array $args):array
 
     return [$field,$operator,$value, $typeWhere];
 }
-function whereFourParameters(array $args):array
+function whereFourParameters(array $args): array
 {
     $field = $args[0];
     $operator = $args[1];
-    $value = $args[1];
+    $value = $args[2];
     $typeWhere = $args[3];
 
     return [$field,$operator,$value, $typeWhere];

@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $this->e($title) ?></title>
     <link rel="stylesheet" type="text/css" href="/assets/css/styles.css">
+    <?=$this->section('styles')?>
 </head>
 <body>
+
     <div id="header">
     <?=$this->insert('partials/header')?>
     </div>

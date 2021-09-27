@@ -60,9 +60,17 @@ function router()
         $params = paramsFormat($uri, $params);
     }
 
+    if ($_ENV['MAINTENANCE'] === 'true') {
+        $matchedUri = ['/maintenance' => 'Maintenance@index'];
+    }
+
+    // dd($matchedUri);
+
+
     if (!empty($matchedUri)) {
         return controller($matchedUri, $params);
     }
+
 
     throw new Exception('Algo deu errado');
 }
