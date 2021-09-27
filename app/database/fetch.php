@@ -13,6 +13,47 @@ function read(string $table, string $fields = '*')
     $query['sql'] = "select {$fields} from {$table}";
 }
 
+function limit(string|int $limit)
+{
+    global $query;
+
+    $query['limit'] = true;
+
+    if (isset($query['paginate'])) {
+        throw new Exception("O limite nao pode ser chamado com a paginação");
+    }
+
+    $query['sql'] = "{$query['sql']} limit {$limit}";
+}
+
+function order(string $by, string $order = 'asc')
+{
+    global $query;
+
+    if (isset($query['limit'])) {
+        throw new Exception("O order nao pode vir depois do limit");
+    }
+
+
+    if (isset($query['paginate'])) {
+        throw new Exception("O order nao pode vir depois da paginação");
+    }
+
+    $query['sql'] = "{$query['sql']} order by {$by} {$order}";
+}
+
+function paginate(string|int $perPage = 10)
+{
+    global $query;
+
+    if (isset($query['limit'])) {
+        throw new Exception("A paginação nao pode ser chamada com o limite");
+    }
+
+    $query['paginate'] = true;
+}
+
+
 function where()
 {
     global $query;
@@ -44,24 +85,6 @@ function where()
     $query['execute'] = array_merge($query['execute'], [$field => $value]);
     $query['sql'] = "{$query['sql']} where {$field} {$operator} :{$field}";
 }
-
-
-// function where(string $field, string $operator, string|int $value)
-// {
-//     global $query;
-
-//     if (!isset($query['read'])) {
-//         throw new Exception('Antes de chamar o where chame o read');
-//     }
-
-//     if (func_num_args() !== 3) {
-//         throw new Exception('O where precisa de exatamente 3 parâmetros');
-//     }
-
-//     $query['where'] = true;
-//     $query['execute'] = array_merge($query['execute'], [$field => $value]);
-//     $query['sql'] = "{$query['sql']} where {$field} {$operator} :{$field}";
-// }
 
 
 function orWhere()
@@ -129,6 +152,23 @@ function whereFourParameters(array $args):array
 }
 
 
+// function where(string $field, string $operator, string|int $value)
+// {
+//     global $query;
+
+//     if (!isset($query['read'])) {
+//         throw new Exception('Antes de chamar o where chame o read');
+//     }
+
+//     if (func_num_args() !== 3) {
+//         throw new Exception('O where precisa de exatamente 3 parâmetros');
+//     }
+
+//     $query['where'] = true;
+//     $query['execute'] = array_merge($query['execute'], [$field => $value]);
+//     $query['sql'] = "{$query['sql']} where {$field} {$operator} :{$field}";
+// }
+
 // function orWhere(string $field, string $operator, string|int $value, string $typeWhere ='or')
 // {
 //     global $query;
@@ -151,37 +191,6 @@ function whereFourParameters(array $args):array
 // }
 
 
-function limit(string|int $limit)
-{
-    global $query;
-
-    if (!isset($query['read'])) {
-        throw new Exception('Antes de chamar o limit chame o read');
-    }
-
-    $query['limit'] = true;
-    $query['sql'] = "{$query['sql']} limit {$limit}";
-}
-
-function order(string $by, string $descOrAsc = 'ASC')
-{
-    global $query;
-
-    if (isset($query['paginate'])) {
-        throw new Exception('O order nao pode vir depois da paginaçao');
-    }
-
-    if (isset($query['limit'])) {
-        throw new Exception('O order nao pode vir depois do limit');
-    }
-
-    $query['sql'] = "{$query['sql']} order by {$by} {$descOrAsc}";
-}
-
-function paginate()
-{
-    global $query;
-}
 
 function execute()
 {
@@ -189,7 +198,7 @@ function execute()
 
     $connect = connect();
 
-    dd($query);
+    // dd($query);
     $prepare = $connect->prepare($query['sql']);
     $prepare->execute($query['execute'] ?? []);
 
