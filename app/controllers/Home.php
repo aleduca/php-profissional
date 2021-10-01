@@ -6,14 +6,24 @@ class Home
 {
     public function index($params): array
     {
-        // $users = all('users');
+        $search = filter_input(INPUT_GET, 's', FILTER_SANITIZE_STRING);
 
         read('users', 'id,firstName,lastName');
+
+        if ($search) {
+            search(['firstName' => $search,'lastName' => $search]);
+        }
+
+
+        // select * from users where firstName like %alexandre% or lastName like %alexandre% or age
+
+
         $users = execute();
+        // dd($users);
 
         // select * from users order by id desc limit 10 offset 0
 
-        dd($users);
+        // dd($users);
 
         return [
             'view' => 'home',

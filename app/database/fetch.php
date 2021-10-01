@@ -191,19 +191,57 @@ function whereFourParameters(array $args): array
 //     $query['sql'] = "{$query['sql']} {$typeWhere} {$field} {$operator} :{$field}";
 // }
 
-
-
-function execute()
+function search(array $search)
 {
     global $query;
 
-    $connect = connect();
+    if (isset($query['where'])) {
+        throw new Exception("Não pode chamar o where na busca");
+    }
 
-    // dd($query);
-    $prepare = $connect->prepare($query['sql']);
-    $prepare->execute($query['execute'] ?? []);
+    if (!arrayIsAssociative($search)) {
+        throw new Exception("Na busca o array tem que ser associativo");
+    }
 
-    return $prepare->fetchAll();
+    $sql = "{$query['sql']} where ";
+
+    $execute = [];
+    foreach ($search as $field => $searched) {
+        $sql.= "{$field} like :{$field} or ";
+        $execute[$field] = "%{$searched}%";
+    }
+
+    $sql = rtrim($sql, ' or ');
+
+    $query['sql'] = $sql;
+    $query['execute'] = $execute;
+}
+
+function execute(bool $isFetchAll = true, bool $rowCount = false)
+{
+    global $query;
+
+    try {
+        $connect = connect();
+
+        if (!isset($query['sql'])) {
+            throw new Exception("Precisa ter o sql para executar a query");
+        }
+
+        // dd($query);
+        $prepare = $connect->prepare($query['sql']);
+        $prepare->execute($query['execute'] ?? []);
+
+        if ($rowCount) {
+            return $prepare->rowCount();
+        }
+
+        return $isFetchAll ? $prepare->fetchAll() : $prepare->fetch();
+    } catch (Exception $e) {
+        $message = "Erro no arquivo {$e->getFile()} na linha {$e->getLine()} com a mensagem: {$e->getMessage()}";
+        $message.= $query['sql'];
+        ddd($message);
+    }
 }
 
 
