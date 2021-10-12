@@ -1,5 +1,7 @@
 <?php
 
+use Doctrine\Inflector\InflectorFactory;
+
 // query builder
 
 $query = [];
@@ -8,7 +10,10 @@ function read(string $table, string $fields = '*')
 {
     global $query;
 
+    $query = [];
+
     $query['read'] = true;
+    $query['table'] = $table;
     $query['execute'] = [];
 
     $query['sql'] = "select {$fields} from {$table}";
@@ -58,6 +63,10 @@ function paginate(string|int $perPage = 10)
 function where()
 {
     global $query;
+
+    if (isset($query['where'])) {
+        throw new Exception("Verifique quantos wheres esta sendo chamado na criação da sua query");
+    }
 
     $args = func_get_args();
     $numArgs = func_num_args();
@@ -111,7 +120,7 @@ function orWhere()
     $data = match ($numArgs) {
         2 => whereTwoParameters($args),
         3 => whereThreeParameters($args),
-        4 => whereFourParameters($args),
+        4 => $args,
     };
 
     [$field, $operator, $value, $typeWhere] = $data;
@@ -142,14 +151,52 @@ function whereThreeParameters(array $args): array
 
     return [$field,$operator,$value, $typeWhere];
 }
-function whereFourParameters(array $args): array
-{
-    $field = $args[0];
-    $operator = $args[1];
-    $value = $args[2];
-    $typeWhere = $args[3];
 
-    return [$field,$operator,$value, $typeWhere];
+function whereIn(string $field, array $data)
+{
+    global $query;
+
+    if (isset($query['where'])) {
+        throw new Exception("Não poder ter chamado a função where com a função where in");
+    }
+
+    $query['where'] = true;
+    $query['sql'] = "{$query['sql']} where {$field} in (".'\''.implode('\',\'', $data).'\''.')';
+}
+
+function fieldFK(string $table, string $field)
+{
+    $inflector = InflectorFactory::create()->build();
+    $tableToSingular = $inflector->singularize($table);
+
+    return $tableToSingular.ucfirst($field);
+}
+
+
+function tableJoin(string $table, string $fieldFK, string $typeJoin = 'inner')
+{
+    global $query;
+
+    if (isset($query['where'])) {
+        throw new Exception("Nao posso colocar o where antes do join");
+    }
+
+    $fkToJoin = fieldFK($query['table'], $fieldFK);
+
+    $query['sql'] = "{$query['sql']} {$typeJoin} join {$table} on {$table}.{$fkToJoin} = {$query['table']}.{$fieldFK}";
+}
+
+function tableJoinWithFK(string $table, string $fieldFK, string $typeJoin = 'inner')
+{
+    global $query;
+
+    if (isset($query['where'])) {
+        throw new Exception("Nao posso colocar o where antes do join");
+    }
+
+    $fkToJoin = fieldFK($table, $fieldFK);
+
+    $query['sql'] = "{$query['sql']} {$typeJoin} join {$table} on {$table}.{$fieldFK} = {$query['table']}.{$fkToJoin}";
 }
 
 
@@ -221,6 +268,8 @@ function execute(bool $isFetchAll = true, bool $rowCount = false)
 {
     global $query;
 
+    // dd($query);
+
     try {
         $connect = connect();
 
@@ -228,7 +277,7 @@ function execute(bool $isFetchAll = true, bool $rowCount = false)
             throw new Exception("Precisa ter o sql para executar a query");
         }
 
-        // dd($query);
+        var_dump($query);
         $prepare = $connect->prepare($query['sql']);
         $prepare->execute($query['execute'] ?? []);
 
@@ -238,9 +287,16 @@ function execute(bool $isFetchAll = true, bool $rowCount = false)
 
         return $isFetchAll ? $prepare->fetchAll() : $prepare->fetch();
     } catch (Exception $e) {
-        $message = "Erro no arquivo {$e->getFile()} na linha {$e->getLine()} com a mensagem: {$e->getMessage()}";
-        $message.= $query['sql'];
-        ddd($message);
+        // $message = "Erro no arquivo {$e->getFile()} na linha {$e->getLine()} com a mensagem: {$e->getMessage()}";
+        // $message.= $query['sql'];
+        $error = [
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+            'message' => $e->getMessage(),
+            'sql' => $query['sql'],
+        ];
+
+        ddd($error);
     }
 }
 

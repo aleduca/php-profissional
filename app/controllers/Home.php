@@ -8,17 +8,28 @@ class Home
     {
         $search = filter_input(INPUT_GET, 's', FILTER_SANITIZE_STRING);
 
-        read('users', 'id,firstName,lastName');
+        read('posts', 'posts.id,title,slug,content,firstName,email,lastName');
 
-        if ($search) {
-            search(['firstName' => $search,'lastName' => $search]);
-        }
+        tableJoinWithFK('users', 'id');
+
+        where('firstName', 'Jazmyne Wiza');
+
+        // where('id', '<', 20);
+        // whereIn('firstName', ['Alexandre','Prof. Lulu Ullrich','Loma Champlin']);
+
+        // if ($search) {
+        //     search(['firstName' => $search,'lastName' => $search]);
+        // }
+
+        // limit(10);
 
 
         // select * from users where firstName like %alexandre% or lastName like %alexandre% or age
 
-
         $users = execute();
+
+        dd($users);
+
         // dd($users);
 
         // select * from users order by id desc limit 10 offset 0
