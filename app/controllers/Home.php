@@ -10,6 +10,7 @@ class Home
 
         read('users', 'id,firstName,lastName');
 
+
         if ($search) {
             search(['firstName' => $search]);
         }
