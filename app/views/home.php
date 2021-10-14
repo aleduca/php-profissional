@@ -13,3 +13,5 @@
         <li><?php echo $user->firstName; ?> | <a href="/user/<?php echo $user->id; ?>">detalhes</a></li>
     <?php endforeach; ?>
 </ul>
+
+<?php echo $links; ?>

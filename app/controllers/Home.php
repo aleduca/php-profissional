@@ -8,11 +8,13 @@ class Home
     {
         $search = filter_input(INPUT_GET, 's', FILTER_SANITIZE_STRING);
 
-        read('posts', 'posts.id,title,slug,content,firstName,email,lastName');
+        read('users', 'id,firstName,lastName');
 
-        tableJoinWithFK('users', 'id');
+        if ($search) {
+            search(['firstName' => $search]);
+        }
 
-        where('firstName', 'Jazmyne Wiza');
+        paginate(1);
 
         // where('id', '<', 20);
         // whereIn('firstName', ['Alexandre','Prof. Lulu Ullrich','Loma Champlin']);
@@ -28,7 +30,7 @@ class Home
 
         $users = execute();
 
-        dd($users);
+        // dd($users);
 
         // dd($users);
 
@@ -38,7 +40,7 @@ class Home
 
         return [
             'view' => 'home',
-            'data' => ['title' => 'Home', 'users' => $users]
+            'data' => ['title' => 'Home', 'users' => $users,'links' => render()],
         ];
     }
 }

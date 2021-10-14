@@ -56,7 +56,73 @@ function paginate(string|int $perPage = 10)
         throw new Exception("A paginação nao pode ser chamada com o limite");
     }
 
+    $rowCount = execute(rowCount:true);
+
+    $page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING);
+
+    $page = $page ?? 1;
+
+    $query['currentPage'] = (int)$page;
+    // 41 / 5
+    $query['pageCount'] = (int)ceil($rowCount / $perPage);
+
+    $offset = ($page - 1) * $perPage;
+
     $query['paginate'] = true;
+
+    $query['sql'] = "{$query['sql']} limit {$perPage} offset {$offset}";
+
+    // dd($query);
+}
+
+function render()
+{
+    global $query;
+
+//     <nav aria-label="...">
+    //   <ul class="pagination">
+//     <li class="page-item disabled">
+//       <a class="page-link">Previous</a>
+//     </li>
+//     <li class="page-item"><a class="page-link" href="#">1</a></li>
+//     <li class="page-item active" aria-current="page">
+//       <a class="page-link" href="#">2</a>
+//     </li>
+//     <li class="page-item"><a class="page-link" href="#">3</a></li>
+//     <li class="page-item">
+//       <a class="page-link" href="#">Next</a>
+//     </li>
+    //   </ul>
+    // </nav>
+
+    $pageCount = $query['pageCount'];
+    $currentPage = $query['currentPage'];
+
+    $links = '<ul class="pagination">';
+
+    if ($currentPage > 1) {
+        $previous = $currentPage - 1;
+        $links.= "<li class='page-item'><a href='?page=1' class='page-link'>Primeira</a></li>";
+        $links.= "<li class='page-item'><a href='?page={$previous}' class='page-link'>Anterior</a></li>";
+    }
+
+    $class = '';
+    for ($i=1; $i<=$pageCount ; $i++) {
+        $page = "?page={$i}";
+        $class = $currentPage === $i ? 'active' : '';
+        $links.= "<li class='page-item {$class}'><a href='{$page}' class='page-link'>{$i}</a></li>";
+    }
+
+    if ($currentPage < $pageCount) {
+        $next = $currentPage + 1;
+        $links.= "<li class='page-item'><a href='?page={$next}' class='page-link'>Próxima</a></li>";
+        $links.= "<li class='page-item'><a href='?page={$pageCount}' class='page-link'>Última</a></li>";
+    }
+
+
+    $links .= '</ul>';
+
+    return $links;
 }
 
 
@@ -199,7 +265,6 @@ function tableJoinWithFK(string $table, string $fieldFK, string $typeJoin = 'inn
     $query['sql'] = "{$query['sql']} {$typeJoin} join {$table} on {$table}.{$fieldFK} = {$query['table']}.{$fkToJoin}";
 }
 
-
 // function where(string $field, string $operator, string|int $value)
 // {
 //     global $query;
@@ -277,7 +342,6 @@ function execute(bool $isFetchAll = true, bool $rowCount = false)
             throw new Exception("Precisa ter o sql para executar a query");
         }
 
-        var_dump($query);
         $prepare = $connect->prepare($query['sql']);
         $prepare->execute($query['execute'] ?? []);
 
