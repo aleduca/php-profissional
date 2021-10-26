@@ -15,7 +15,7 @@ class Home
             search(['firstName' => $search]);
         }
 
-        paginate(1);
+        paginate(5);
 
         // where('id', '<', 20);
         // whereIn('firstName', ['Alexandre','Prof. Lulu Ullrich','Loma Champlin']);
@@ -30,6 +30,8 @@ class Home
         // select * from users where firstName like %alexandre% or lastName like %alexandre% or age
 
         $users = execute();
+
+        // dd($users);
 
         // dd($users);
 
