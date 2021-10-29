@@ -11,7 +11,8 @@
         "symfony/var-dumper": "^5.3",
         "league/plates": "^3.4",
         "vlucas/phpdotenv": "^5.3",
-        "doctrine/inflector": "^2.0"
+        "doctrine/inflector": "^2.0",
+        "phpmailer/phpmailer": "^6.5"
     },
     "autoload": {
         "files": [
@@ -27,7 +28,8 @@
             "app/helpers/validations.php",
             "app/helpers/helpers.php",
             "app/helpers/old.php",
-            "app/helpers/csrf.php"
+            "app/helpers/csrf.php",
+            "app/helpers/email.php"
         ],
         "psr-4": {
             "app\\":"app"
