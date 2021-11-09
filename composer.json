@@ -29,7 +29,8 @@
             "app/helpers/helpers.php",
             "app/helpers/old.php",
             "app/helpers/csrf.php",
-            "app/helpers/email.php"
+            "app/helpers/email.php",
+            "app/helpers/image.php"
         ],
         "psr-4": {
             "app\\":"app"

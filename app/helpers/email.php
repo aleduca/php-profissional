@@ -19,7 +19,7 @@ function send(stdClass|array $emailData)
 {
     try {
         if (is_array($emailData)) {
-            $emailData = (object)$emailData;
+            $emailData = (object) $emailData;
         }
 
         $body = (isset($emailData->template)) ? template($emailData) : $emailData->message;
@@ -38,7 +38,7 @@ function send(stdClass|array $emailData)
 
         return $mail->send();
     } catch (Exception $e) {
-        echo $e->getMessage();
+        dd($e->getMessage());
     }
 }
 
@@ -50,7 +50,7 @@ function checkPropertiesEmail($emailData)
     $emailVars = get_object_vars($emailData);
 
     foreach ($propertiesRequired as $prop) {
-        if (!in_array($prop, array_keys($emailVars))) {
+        if (!array_key_exists($prop, $emailVars)) {
             throw new Exception("{$prop} é obrigatório para enviar o email");
         }
     }
@@ -59,7 +59,13 @@ function checkPropertiesEmail($emailData)
 
 function template($emailData)
 {
-    $template = file_get_contents(ROOT."/app/views/emails/{$emailData->template}.html");
+    $templateFile = ROOT."/app/views/emails/{$emailData->template}.html";
+
+    if (!file_exists($templateFile)) {
+        throw new Exception("O template {$emailData->template}.html não existe");
+    }
+
+    $template = file_get_contents($templateFile);
 
     $emailVars = get_object_vars($emailData);
 

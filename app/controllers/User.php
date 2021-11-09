@@ -15,6 +15,15 @@ class User
         die();
     }
 
+
+    public function edit()
+    {
+        return [
+            'view'  => 'edit',
+            'data' => ['title' => 'Edit']
+        ];
+    }
+
     public function create()
     {
         return [
