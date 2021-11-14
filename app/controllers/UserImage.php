@@ -6,7 +6,6 @@ class UserImage
 {
     public function store()
     {
-        $extension = getExtension($_FILES['file']['name']);
-        isImage($extension);
+        upload(640, 480, 'assets/img');
     }
 }
