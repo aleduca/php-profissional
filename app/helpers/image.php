@@ -16,15 +16,17 @@ function getFunctionCreateFrom(string $extension)
 
 function isFileToUpload($fieldName)
 {
-    if (!isset($_FILES[$fieldName]) || !isset($_FILES[$fieldName]['name']) || $_FILES[$fieldName]['name'] === '') {
+    if (!isset($_FILES[$fieldName], $_FILES[$fieldName]['name']) || $_FILES[$fieldName]['name'] === '') {
         throw new Exception("O campo {$fieldName} não existe ou não foi escolhida uma imagem");
     }
 }
 
 function isImage($extension)
 {
-    if (!in_array($extension, ['jpeg','jpg','gif','png'])) {
-        throw new Exception("O arquivo não é aceito");
+    $acceptedExtensions = ['jpeg','jpg','gif','png'];
+    if (!in_array($extension, $acceptedExtensions)) {
+        $extensions = implode(',', $acceptedExtensions);
+        throw new Exception("O arquivo não é aceito, aceitamos somente {$extensions}");
     }
 }
 
@@ -34,10 +36,8 @@ function resize(int $width, int $height, int $newWidth, int $newHeight)
 
     if ($newWidth/$newHeight > $ratio) {
         $newWidth = $newHeight*$ratio;
-        $newHeight = $newHeight;
     } else {
         $newHeight = $newWidth/$ratio;
-        $newWidth = $newWidth;
     }
 
     return [$newWidth,$newHeight];
@@ -60,7 +60,11 @@ function crop(int $width, int $height, int $newWidth, int $newHeight)
 
 function upload(int $newWidth, int $newHeight, string $folder, string $type = 'resize')
 {
+    isFileToUpload('file');
+
     $extension = getExtension($_FILES['file']['name']);
+
+    isImage($extension);
 
     [$width, $height] = getimagesize($_FILES['file']['tmp_name']);
 
@@ -89,5 +93,9 @@ function upload(int $newWidth, int $newHeight, string $folder, string $type = 'r
         );
     }
 
-    $saveImage($dst, $folder.DIRECTORY_SEPARATOR.rand().'.'.$extension);
+    $path = $folder.DIRECTORY_SEPARATOR.rand().'.'.$extension;
+
+    $saveImage($dst, $path);
+
+    return $path;
 }

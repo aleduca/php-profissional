@@ -31,9 +31,15 @@ function where()
         $value = $args[2];
     }
 
+    $fieldWhere = $field;
+
+    if (str_contains($field, '.')) {
+        [, $fieldWhere] = explode('.', $field);
+    }
+
     $query['where'] = true;
-    $query['execute'] = array_merge($query['execute'], [$field => $value]);
-    $query['sql'] = "{$query['sql']} where {$field} {$operator} :{$field}";
+    $query['execute'] = array_merge($query['execute'], [$fieldWhere => $value]);
+    $query['sql'] = "{$query['sql']} where {$field} {$operator} :{$fieldWhere}";
 }
 
 

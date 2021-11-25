@@ -18,9 +18,22 @@ class User
 
     public function edit()
     {
+        if (!logged()) {
+            redirect('/');
+        }
+
+        read('users', 'users.id,firstName,lastName,email,password,path');
+        tableJoin('photos', 'id', 'left');
+        where('users.id', user()->id);
+
+        $user = execute(isFetchAll:false);
+
+        // dd($user);
+
+
         return [
             'view'  => 'edit',
-            'data' => ['title' => 'Edit']
+            'data' => ['title' => 'Edit','user' => $user]
         ];
     }
 

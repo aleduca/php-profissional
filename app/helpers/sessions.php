@@ -8,7 +8,7 @@ function user()
 }
 
 
-function logged():bool
+function logged(): bool
 {
     return isset($_SESSION[LOGGED]);
 }

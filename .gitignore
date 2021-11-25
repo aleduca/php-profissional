@@ -1,4 +1,9 @@
 vendor
 .idea
 node_modules
+.DS_Store
 .env
+*.png
+*.jpeg
+*.jpg
+*.gif

@@ -4,7 +4,7 @@ namespace app\controllers;
 
 class Login
 {
-    public function index():array
+    public function index(): array
     {
         return [
             'view' => 'login',
@@ -21,7 +21,15 @@ class Login
             return setMessageAndRedirect('message', 'Usuário ou senha inválidos', '/login');
         }
 
-        $user = findBy('users', 'email', $email);
+        // $user = findBy('users', 'email', $email);
+
+        read('users', 'users.id,firstName,lastName,email,password,path');
+        tableJoin('photos', 'id', 'left');
+        where('email', $email);
+
+        $user = execute(isFetchAll:false);
+
+        // dd($user);
 
         if (!$user) {
             return setMessageAndRedirect('message', 'Usuário ou senha inválidos', '/login');
@@ -32,6 +40,7 @@ class Login
         }
 
         $_SESSION[LOGGED] = $user;
+
         return redirect('/');
     }
 
