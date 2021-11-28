@@ -1,7 +1,22 @@
 <?php $this->layout('master', ['title' => $title]) ?>
 
+<?php echo getFlash('updated_success', 'color:green'); ?>
+<?php echo getFlash('updated_error'); ?>
+
+<form method="post" action="/user/<?php echo $user->id ?>">
+    <input type="text" name="firstName" value="<?php echo $user->firstName ?>">
+    <?php echo getFlash('firstName'); ?>
+    <input type="text" name="lastName" value="<?php echo $user->lastName ?>">
+    <?php echo getFlash('lastName'); ?>
+    <input type="text" name="email" value="<?php echo $user->email ?>">
+    <?php echo getFlash('email'); ?>
+    <button type="submit">Atualizar</button>
+</form>
+
+<hr>
+
 <?php if ($user->path) : ?>
-<img src="/<?php echo $user->path ?>" alt="">
+    <img src="/<?php echo $user->path ?>" alt="">
 <?php endif; ?>
 
 <form action="/user/profile/update" method="post"></form>

@@ -39,6 +39,8 @@ class Login
             return setMessageAndRedirect('message', 'Usuário ou senha inválidos', '/login');
         }
 
+        unset($user->password);
+
         $_SESSION[LOGGED] = $user;
 
         return redirect('/');

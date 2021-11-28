@@ -1,7 +1,6 @@
 <?php
 
 namespace app\controllers;
-
 class UserImage
 {
     public function store()
@@ -30,9 +29,8 @@ class UserImage
                 ]);
             }
 
-            $auth->path = $path;
-
             if ($updated) {
+                $auth->path = $path;
                 setMessageAndRedirect('upload_success', 'Upload feito com sucesso', '/user/edit/profile');
                 return;
             }
