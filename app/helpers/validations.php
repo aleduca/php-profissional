@@ -23,6 +23,31 @@ function email($field)
     return filter_input(INPUT_POST, $field, FILTER_SANITIZE_STRING);
 }
 
+
+function uniqueUpdate($field, $param)
+{
+    $email = filter_input(INPUT_POST, $field, FILTER_SANITIZE_STRING);
+
+    if (str_contains($param, '=')) {
+        list($fieldToCompare, $value) = explode('=', $param);
+
+        read('users');
+        where($field, $email);
+        orWhere($fieldToCompare, '!=', $value, 'and');
+        $userFound = execute(isFetchAll:false);
+        if ($userFound) {
+            setFlash($field, "Esse valor já está cadastrado");
+            return false;
+        }
+    } else {
+        setFlash($field, "A validaçao para o unique email no update tem que ter o sinal de =");
+        return false;
+        // throw new Exception("A validaçao para o unique email no update tem que ter o sinal de =");
+    }
+
+    return $email;
+}
+
 function unique($field, $param)
 {
     $data = filter_input(INPUT_POST, $field, FILTER_SANITIZE_STRING);
@@ -35,6 +60,7 @@ function unique($field, $param)
 
     return $data;
 }
+
 
 function maxlen($field, $param)
 {

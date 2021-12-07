@@ -13,6 +13,8 @@ function execute(bool $isFetchAll = true, bool $rowCount = false)
             throw new Exception("Precisa ter o sql para executar a query");
         }
 
+        // dd($query);
+
         $prepare = $connect->prepare($query['sql']);
         $prepare->execute($query['execute'] ?? []);
 

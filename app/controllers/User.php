@@ -76,8 +76,9 @@ class User
         $validated = validate([
             'firstName' => 'required',
             'lastName' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email|uniqueUpdate:id='.$args['user']
         ]);
+
 
         if (!$validated) {
             return redirect('/user/edit/profile');

@@ -72,7 +72,6 @@ function orWhere()
     [$field, $operator, $value, $typeWhere] = $data;
 
     // dd([$field => $value]);
-
     $query['where'] = true;
     $query['execute'] = array_merge($query['execute'], [$field => $value]);
     $query['sql'] = "{$query['sql']} {$typeWhere} {$field} {$operator} :{$field}";
