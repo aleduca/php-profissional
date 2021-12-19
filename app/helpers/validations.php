@@ -7,7 +7,9 @@ function required($field)
         return false;
     }
 
-    return filter_input(INPUT_POST, $field, FILTER_SANITIZE_STRING);
+    return strip_tags($_POST[$field]);
+
+    // return filter_input(INPUT_POST, $field, FILTER_SANITIZE_STRING);
 }
 
 
@@ -20,37 +22,48 @@ function email($field)
         return false;
     }
 
-    return filter_input(INPUT_POST, $field, FILTER_SANITIZE_STRING);
+    // return filter_input(INPUT_POST, $field, FILTER_SANITIZE_STRING);
+    return strip_tags($_POST[$field]);
 }
 
 
 function uniqueUpdate($field, $param)
 {
-    $email = filter_input(INPUT_POST, $field, FILTER_SANITIZE_STRING);
+    // $email = filter_input(INPUT_POST, $field, FILTER_SANITIZE_STRING);
+    $email = strip_tags($_POST[$field]);
 
-    if (str_contains($param, '=')) {
-        list($fieldToCompare, $value) = explode('=', $param);
-
-        read('users');
-        where($field, $email);
-        orWhere($fieldToCompare, '!=', $value, 'and');
-        $userFound = execute(isFetchAll:false);
-        if ($userFound) {
-            setFlash($field, "Esse valor já está cadastrado");
-            return false;
-        }
-    } else {
+    if (!str_contains($param, '=')) {
         setFlash($field, "A validaçao para o unique email no update tem que ter o sinal de =");
         return false;
-        // throw new Exception("A validaçao para o unique email no update tem que ter o sinal de =");
     }
+
+    [$fieldToCompare, $value] = explode('=', $param);
+
+    if (!str_contains($fieldToCompare, ',')) {
+        setFlash($field, "A validaçao para o unique email no update tem que ter a virgula");
+        return false;
+    }
+
+    $table = substr($fieldToCompare, 0, strpos($fieldToCompare, ','));
+    $fieldToCompare = substr($fieldToCompare, strpos($fieldToCompare, ',')+1);
+
+    read($table);
+    where($field, $email);
+    orWhere($fieldToCompare, '!=', $value, 'and');
+    $userFound = execute(isFetchAll:false);
+    if ($userFound) {
+        setFlash($field, "Esse valor já está cadastrado");
+        return false;
+    }
+
 
     return $email;
 }
 
 function unique($field, $param)
 {
-    $data = filter_input(INPUT_POST, $field, FILTER_SANITIZE_STRING);
+    // $data = filter_input(INPUT_POST, $field, FILTER_SANITIZE_STRING);
+    $data = strip_tags($_POST[$field]);
     $user = findBy($param, $field, $data);
 
     if ($user) {
@@ -64,7 +77,8 @@ function unique($field, $param)
 
 function maxlen($field, $param)
 {
-    $data = filter_input(INPUT_POST, $field, FILTER_SANITIZE_STRING);
+    // $data = filter_input(INPUT_POST, $field, FILTER_SANITIZE_STRING);
+    $data = strip_tags($_POST[$field]);
 
     if (strlen($data) > $param) {
         setFlash($field, "Esse campo não pode passar de {$param} caracteres");
@@ -76,7 +90,8 @@ function maxlen($field, $param)
 
 function optional($field)
 {
-    $data = filter_input(INPUT_POST, $field, FILTER_SANITIZE_STRING);
+    // $data = filter_input(INPUT_POST, $field, FILTER_SANITIZE_STRING);
+    $data = strip_tags($_POST[$field]);
 
     if ($data === '') {
         return null;
