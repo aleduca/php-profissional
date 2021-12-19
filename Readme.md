@@ -9,6 +9,6 @@
 
 1. composer install - Para instalar as dependências do composer
 2. npm install - Para instalar as dependências do npm
-3. php -S localhost:8000 - Para iniciar o servidor do php
+3. no terminal digite: `php -S localhost:8000` - Para iniciar o servidor do php
 4. npm run dev - Para rodar o webpack
 5. Mudar o banco de dados no arquivo .env - Para mudar o bando de dados
