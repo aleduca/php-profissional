@@ -4,7 +4,7 @@ namespace app\controllers;
 
 class Maintenance
 {
-    public function index()
+    public function index(): array
     {
         return [
             'view' => 'maintenance',

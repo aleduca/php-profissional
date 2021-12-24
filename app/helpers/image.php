@@ -8,9 +8,9 @@ function getExtension(string $name)
 function getFunctionCreateFrom(string $extension)
 {
     return match ($extension) {
-        'png' => ['imagecreatefrompng','imagepng'],
-        'jpg','jpeg' => ['imagecreatefromjpeg','imagejpeg'],
-        'gif' => ['imagecreatefromgif','imagegif'],
+        'png' => ['imagecreatefrompng', 'imagepng'],
+        'jpg', 'jpeg' => ['imagecreatefromjpeg', 'imagejpeg'],
+        'gif' => ['imagecreatefromgif', 'imagegif'],
     };
 }
 
@@ -23,7 +23,7 @@ function isFileToUpload($fieldName)
 
 function isImage($extension)
 {
-    $acceptedExtensions = ['jpeg','jpg','gif','png'];
+    $acceptedExtensions = ['jpeg', 'jpg', 'gif', 'png'];
     if (!in_array($extension, $acceptedExtensions)) {
         $extensions = implode(',', $acceptedExtensions);
         throw new Exception("O arquivo não é aceito, aceitamos somente {$extensions}");
@@ -32,15 +32,13 @@ function isImage($extension)
 
 function resize(int $width, int $height, int $newWidth, int $newHeight)
 {
-    $ratio = $width/$height;
+    $ratio = $width / $height;
 
-    if ($newWidth/$newHeight > $ratio) {
-        $newWidth = $newHeight*$ratio;
-    } else {
-        $newHeight = $newWidth/$ratio;
-    }
+    ($newWidth / $newHeight > $ratio) ?
+        $newWidth = $newHeight * $ratio :
+        $newHeight = $newWidth / $ratio;
 
-    return [$newWidth,$newHeight];
+    return [$newWidth, $newHeight];
 }
 
 function crop(int $width, int $height, int $newWidth, int $newHeight)
@@ -55,7 +53,7 @@ function crop(int $width, int $height, int $newWidth, int $newHeight)
         $newWidth = $width / ($height / $thumbHeight) :
         $newHeight = $height / ($width / $thumbWidth);
 
-    return [$newWidth,$newHeight,$thumbWidth,$thumbHeight];
+    return [$newWidth, $newHeight, $thumbWidth, $thumbHeight];
 }
 
 function upload(int $newWidth, int $newHeight, string $folder, string $type = 'resize')
@@ -73,11 +71,11 @@ function upload(int $newWidth, int $newHeight, string $folder, string $type = 'r
     $src = $functionCrateFrom($_FILES['file']['tmp_name']);
 
     if ($type === 'resize') {
-        [$newWidth,$newHeight] = resize($width, $height, $newWidth, $newHeight);
+        [$newWidth, $newHeight] = resize($width, $height, $newWidth, $newHeight);
         $dst = imagecreatetruecolor($newWidth, $newHeight);
         imagecopyresampled($dst, $src, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
     } else {
-        [$newWidth,$newHeight, $thumbWidth,$thumbHeight] = crop($width, $height, $newWidth, $newHeight);
+        [$newWidth, $newHeight, $thumbWidth, $thumbHeight] = crop($width, $height, $newWidth, $newHeight);
         $dst = imagecreatetruecolor($thumbWidth, $thumbHeight);
         imagecopyresampled(
             $dst,
@@ -93,7 +91,7 @@ function upload(int $newWidth, int $newHeight, string $folder, string $type = 'r
         );
     }
 
-    $path = $folder.DIRECTORY_SEPARATOR.rand().'.'.$extension;
+    $path = $folder . DIRECTORY_SEPARATOR . rand() . '.' . $extension;
 
     $saveImage($dst, $path);
 

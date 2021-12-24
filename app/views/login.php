@@ -4,7 +4,7 @@
 <h2>Login</h2>
     <?php echo getFlash('message'); ?>
 <form action="/login" method="post" id="box-login">
-    <input type="text" name="email" placeholder="Seu email" value="everton09@matias.com">
+    <input type="text" name="email" placeholder="Seu email" value="salazar.horacio@hotmail.com">
     <input type="password" name="password" placeholder="Sua senha" value="123">
     <button type="submit">Login</button>
 </form>

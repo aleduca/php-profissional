@@ -11,7 +11,6 @@ class User
         }
 
         $user = findBy('users', 'id', $params['user']);
-        var_dump($user);
         die();
     }
 
@@ -34,7 +33,7 @@ class User
         ];
     }
 
-    public function create()
+    public function create():array
     {
         return [
             'view'  => 'create',
@@ -79,7 +78,6 @@ class User
             'email' => 'required|email|uniqueUpdate:users,id='.$args['user']
         ]);
 
-
         if (!$validated) {
             return redirect('/user/edit/profile');
         }
@@ -87,8 +85,7 @@ class User
         $updated = update('users', $validated, ['id' => user()->id]);
 
         if ($updated) {
-            setMessageAndRedirect('updated_success', 'Atualizado com sucesso', '/user/edit/profile');
-            return;
+            return setMessageAndRedirect('updated_success', 'Atualizado com sucesso', '/user/edit/profile');
         }
         setMessageAndRedirect('updated_error', 'Ocorreu um erro ao atualizar', '/user/edit/profile');
     }

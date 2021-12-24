@@ -99,3 +99,21 @@ function optional($field)
 
     return $data;
 }
+
+function confirmed($field){
+
+    if(!isset($_POST['password'], $_POST['password_confirmation'])){
+        setFlash($field, "Os campos para atualizar a senha são obrigatórios");
+        return false;
+    }
+
+    $password = strip_tags($_POST['password']);
+    $password_confirmation = strip_tags($_POST['password_confirmation']);
+
+    if($password !== $password_confirmation){
+        setFlash($field, "As duas senhas tem que ser iguais");
+        return false;
+    }
+
+    return password_hash($password, PASSWORD_DEFAULT);
+}

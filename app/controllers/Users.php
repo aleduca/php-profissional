@@ -4,7 +4,7 @@ namespace app\controllers;
 
 class Users
 {
-    public function index()
+    public function index(): void
     {
         $users = all('users', 'id,firstName,lastName');
 
