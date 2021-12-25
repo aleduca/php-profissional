@@ -11,8 +11,8 @@ class Password
         }
 
         $validated = validate([
-            'password' => 'required|confirmed',
-            'password_confirmation' => 'required'
+            'email' => 'required|confirmed',
+            'email_confirmation' => 'required'
         ], checkCsrf: true);
 
 
@@ -20,6 +20,7 @@ class Password
             return redirect('/user/edit/profile');
         }
 
+        dd($validated);
         $updated = update('users', [
             'password' => $validated['password']
         ], ['id' => user()->id]);
@@ -35,7 +36,6 @@ class Password
                 'message' => 'Senha alterada com sucesso',
                 'template' => 'password'
             ]);
-
             return setMessageAndRedirect('password_success', 'Senha alterada com sucesso', "/user/edit/profile");
         } else {
             return setMessageAndRedirect('password_error', 'Ocorreu um erro ao atualizar a senha ', "/user/edit/profile");

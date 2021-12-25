@@ -19,7 +19,6 @@
 <form action="/password/user/<?php echo $user->id ?>" method="post">
 
     <?php echo getCsrf(); ?>
-
     <input type="text" name="password">
     <?php echo getFlash('password'); ?>
     <input type="text" name="password_confirmation">
